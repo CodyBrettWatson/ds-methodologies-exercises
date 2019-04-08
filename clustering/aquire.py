@@ -48,3 +48,30 @@ def get_zillow_data() -> pd.DataFrame:
              "JOIN properties_2017 USING(parcelid);")
     url = get_db_url(host, user, password, idb)
     return df_from_sql(query, url)
+
+
+def get_2016_zillow():
+    idb = "zillow"
+    query = ('\
+    SELECT p16.*, pred16.logerror, act.airconditioningdesc, ast.architecturalstyledesc, \
+        bct.buildingclassdesc, hst.heatingorsystemdesc, plut.propertylandusedesc, \
+        st.storydesc, tct.typeconstructiondesc FROM properties_2016 p16 \
+    JOIN predictions_2016 pred16 \
+                       ON pred16.parcelid = p16.parcelid \
+    LEFT JOIN airconditioningtype act \
+                       ON p16.airconditioningtypeid = act.airconditioningtypeid\
+    LEFT JOIN architecturalstyletype ast \
+                       ON p16.architecturalstyletypeid = ast.architecturalstyletypeid\
+    LEFT JOIN buildingclasstype bct \
+                       ON p16.buildingclasstypeid = bct.buildingclasstypeid\
+    LEFT JOIN heatingorsystemtype hst \
+                       ON p16.heatingorsystemtypeid = hst.heatingorsystemtypeid\
+    LEFT JOIN propertylandusetype plut \
+                       ON p16.propertylandusetypeid = plut.propertylandusetypeid\
+    LEFT JOIN storytype st \
+                       ON p16.storytypeid = st.storytypeid\
+    LEFT JOIN typeconstructiontype tct \
+                       ON p16.typeconstructiontypeid = tct.typeconstructiontypeid;')
+
+    url = get_db_url(host, user, password, idb)
+    return df_from_sql(query, url)
