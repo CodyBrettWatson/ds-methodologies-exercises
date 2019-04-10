@@ -2,7 +2,8 @@
 ## WILL NEED TO PIPE ALL THESE FUNCTIONS##
 ##########################################
 
-import acquire 
+import acquire
+import pandas as pd
 
 def unitcnt (df):
     single_unit = [
@@ -59,7 +60,16 @@ def field_temp_drop(df):
         'architecturalstyledesc',
         'buildingclassdesc',
         'storydesc',
-        'typeconstructiondesc'
+        'typeconstructiondesc',
+
+        'regionidneighborhood',
+        'airconditioningdesc',
+
+        'unitcnt',
+        'propertylandusedesc',
+        'propertycountylandusecode', 
+        'propertyzoningdesc', 
+        'heatingorsystemdesc'
     ]))
     
     return df
@@ -81,3 +91,18 @@ def convert_col_type(df):
     df[obj_fields] = df[obj_fields].convert_objects(convert_numeric=True)
 
     return df
+
+def check_missing_values_col(df):
+    '''
+    Write or use a previously written function to return the
+    total missing values and the percent missing values by column.
+    '''
+    null_count = df.isnull().sum()
+    null_percentage = (null_count / df.shape[0]) * 100
+    empty_count = pd.Series(((df == ' ') | (df == '')).sum())
+    empty_percentage = (empty_count / df.shape[0]) * 100
+    nan_count = pd.Series(((df == 'nan') | (df == 'NaN')).sum())
+    nan_percentage = (nan_count / df.shape[0]) * 100
+    return pd.DataFrame({'num_missing': null_count, 'missing_percentage': null_percentage,
+                         'num_empty': empty_count, 'empty_percentage': empty_percentage,
+                         'nan_count': nan_count, 'nan_percentage': nan_percentage})
