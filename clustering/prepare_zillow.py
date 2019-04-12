@@ -5,6 +5,7 @@
 import acquire
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
 
 ## Function By Orion
 def unitcnt (df):
@@ -153,10 +154,23 @@ def scale_min_max_iris(df):
         'rawcensustractandblock',
         'censustractandblock']
     
+    col_list2 = ['parcelid',
+    'logerror',
+    'bathroomcnt',
+    'bedroomcnt',
+    'abs_log',
+    'logerror_bin']
+
+    scale_df = df[col_list]
+    other = df[col_list2]
+
     scaler = MinMaxScaler()
     scaler.fit(df[col_list])
-    df[col_list]=scaler.transform(df[col_list])
-    return df
+    scale_df[col_list]=scaler.transform(scale_df[col_list])
+    frames = [scale_df[col_list], other]
+    real_scale = pd.concat(frames)
+
+    return real_scale
 
 
 

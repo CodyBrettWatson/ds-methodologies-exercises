@@ -9,6 +9,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import StandardScaler
 
+
+
 # Exploring
 import scipy.stats as stats
 
@@ -17,6 +19,10 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 import seaborn as sns
 from sklearn.model_selection import learning_curve
+from matplotlib.pyplot import figure
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import rcParams
+
 
 pd.options.display.float_format = '{:20,.2f}'.format
 
@@ -75,6 +81,7 @@ def scatter_3d (x ,y, z):
 
 
 def kde_func(x ,y):
+    fig = plt.gcf()
     ax = sns.kdeplot(x, y, shade=True, cmap="cubehelix")
     fig.set_size_inches(11.7, 8.27)
 
