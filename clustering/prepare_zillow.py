@@ -4,6 +4,7 @@
 
 import acquire
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 
 ## Function By Orion
 def unitcnt (df):
@@ -129,6 +130,33 @@ def check_missing_values_col(df):
 def numeric_to_categorical(df: pd.DataFrame, cols: tuple) -> pd.DataFrame:
     to_coerce = {col: "category" for col in cols}
     return df.astype(to_coerce)
+
+
+def logerror_manipulation_func(df):
+    df['abs_log'] = df.logerror.abs()
+    df['logerror_bin'] = pd.qcut(df.abs_log, 4, labels=["good", "medium-", "medium+", "bad"])
+    return df
+
+def scale_min_max_iris(df):
+    col_list = ['calculatedfinishedsquarefeet',
+        'lotsizesquarefeet',
+        'latitude',
+        'longitude',
+        'regionidcity',
+        'regionidzip',
+        'yearbuilt',
+        'structuretaxvaluedollarcnt',
+        'taxvaluedollarcnt',
+        'landtaxvaluedollarcnt',
+        'taxamount',
+        'assessmentyear',
+        'rawcensustractandblock',
+        'censustractandblock']
+    
+    scaler = MinMaxScaler()
+    scaler.fit(df[col_list])
+    df[col_list]=scaler.transform(df[col_list])
+    return df
 
 
 
