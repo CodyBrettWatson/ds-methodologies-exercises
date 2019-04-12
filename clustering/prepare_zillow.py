@@ -5,6 +5,7 @@
 import acquire
 import pandas as pd
 
+## Function By Orion
 def unitcnt (df):
     single_unit = [
         'Condominium',
@@ -17,12 +18,13 @@ def unitcnt (df):
     df = df[df.propertylandusedesc.isin(single_unit)]
 
     df = df.drop(df[(df['unitcnt']> 1)].index)
+    df = df.drop(df[(df['regionidzip']> 99999)].index)
     # df = df.drop(df.filter(regex=['Duplex','Triplex',
     # 'Commercial','Cooperative']).columns, axis=1)
     
     return df
 
-
+## Function By Orion
 def lat_long_null_values(df):
     df = df[~df.longitude.isnull() | ~df.latitude.isnull()]
     return df
@@ -34,6 +36,7 @@ def dropna_fields(df):
 
 def field_temp_drop(df):
     df = df.drop(columns=([
+        ## almost 100% nulls
         'garagecarcnt',
         'garagetotalsqft',
         'basementsqft',
@@ -62,14 +65,25 @@ def field_temp_drop(df):
         'storydesc',
         'typeconstructiondesc',
 
+        ## around 50k nulls
         'regionidneighborhood',
         'airconditioningdesc',
-
+        
+        ## contains strings 
         'unitcnt',
         'propertylandusedesc',
         'propertycountylandusecode', 
         'propertyzoningdesc', 
-        'heatingorsystemdesc'
+        'heatingorsystemdesc',
+
+        ## erroneous
+        'roomcnt',
+        'calculatedbathnbr',
+        'fullbathcnt',
+        'fips',
+
+        ## made erroneous by previous data prep when removing null values from unitcnt
+        'regionidcounty'
     ]))
     
     return df
@@ -92,6 +106,8 @@ def convert_col_type(df):
 
     return df
 
+
+##Function By DD
 def check_missing_values_col(df):
     '''
     Write or use a previously written function to return the
@@ -106,3 +122,28 @@ def check_missing_values_col(df):
     return pd.DataFrame({'num_missing': null_count, 'missing_percentage': null_percentage,
                          'num_empty': empty_count, 'empty_percentage': empty_percentage,
                          'nan_count': nan_count, 'nan_percentage': nan_percentage})
+
+
+
+###Function By Michael
+def numeric_to_categorical(df: pd.DataFrame, cols: tuple) -> pd.DataFrame:
+    to_coerce = {col: "category" for col in cols}
+    return df.astype(to_coerce)
+
+
+
+######################
+##WORK ON THIS LATER##
+######################
+# col = ['bathroomcnt','bedroomcnt',
+#        'calculatedfinishedsquarefeet',
+#        'lotsizesquarefeet','taxvaluedollarcnt',
+#        'landtaxvaluedollarcnt', 'taxamount',
+#       ]
+
+# q = df[col].quantile(0.99)
+# pdf = df[df[col] < q]
+# pdf.T
+
+# # from scipy import stats
+# # pdf = df[(np.abs(stats.zscore(df)) < 3).all(axis=1)]
